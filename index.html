@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webpage Builder</title>
+    
+    <!-- Link external CSS -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Include CKEditor from CDN -->
+    <script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1> Text Editor </h1>
+        
+        <div class="editor-container">
+            <form id="htmlForm" action="save_html.php" method="POST">
+                <!-- Textarea for CKEditor -->
+                <textarea name="editor_content" id="editor"></textarea>
+                <br>
+                
+    
+    <input type="file" id="fileInput" accept=".txt">
+    <button id="loadButton">Load File</button>
+    <button id="saveButton">Save File</button>
+                <button type="submit" class="btn-submit">Generate Page</button>
+            </form>
+        </div>
+        
+        <!-- Feedback message -->
+        <div id="message" class="message hidden"></div>
+    </div>
+
+    <!-- Initialize CKEditor -->
+    <script>
+        CKEDITOR.replace('editor');
+        document.getElementById('loadButton').addEventListener('click', function() {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('editor').value = e.target.result;
+                };
+                reader.readAsText(file);
+            } else {
+                alert('Please select a file to load.');
+            }
+        });
+
+        document.getElementById('saveButton').addEventListener('click', function() {
+            const text = document.getElementById('editor').value;
+            const blob = new Blob([text], { type: 'text/plain' });
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.download = 'edited_text.txt';
+            link.click();
+        });
+
+    </script>
+</body>
+</html>
